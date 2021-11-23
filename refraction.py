@@ -13,12 +13,12 @@ plt.rc('text.latex', preamble=r'\usepackage{amsmath}')
 # P2 = P-wave trasmission angle, S2 = SW-wave transmission angle
 
 # from the paper, water kg/m3, aluminum kg/m3, water m/s ...
-rho_1 = 1000
-rho_2 = 2000
-c_P1 = 1500
-c_S1 = 0.001
-c_P2 = 6420
-c_S2 = 3040
+rho_1 = 998
+rho_2 = 1732
+c_P1 = 1481#1480
+c_S1 = 0.01
+c_P2 = 2850#6420
+c_S2 = 1400
 
 def snell(th_P1, c_P1, c_P2):
 	th_P2 = cmath.asin(np.sin(th_P1)*c_P2/c_P1)
@@ -37,8 +37,7 @@ def other_matrix(th_P1, th_S1):
 	omat = np.array([-np.sin(th_P1)/(rho_1*c_P1) , np.cos(th_P1)/(rho_1*c_P1) , np.cos(2*th_S1) , np.sin(2*th_P1)/(c_P1**2/c_S1**2)])
 	return omat.T # transform from (x,1) to (1,x)
 
-th = np.linspace(0,30,1000)
-
+th = np.linspace(-90,90,1000)
 
 R_P_Pot = np.zeros(len(th))
 R_S_Pot = np.zeros_like(R_P_Pot)
@@ -65,15 +64,13 @@ for i, th_P1 in enumerate(th):
 	T_P_Pot[i] = T_P*np.conj(T_P)*np.real(1/np.conj(Z_P2))/np.real(1/np.conj(Z_P1))
 	T_S_Pot[i] = T_S*np.conj(T_S)*np.real(1/np.conj(Z_S2))/np.real(1/np.conj(Z_P1))
 
-fig = plt.figure(figsize=(10,8))
-ax = fig.add_subplot()
-ax.set_title('Interface results', fontsize=18)
-ax.plot(th, R_P_Pot, label = 'R P Pot')
-ax.plot(th, R_S_Pot, label = 'R S Pot')
-ax.plot(th, T_P_Pot, label = 'T P Pot')
-ax.plot(th, T_S_Pot, label = 'T S Pot')
-ax.set_xlabel('Angle of incidence (degree)', fontsize=14)
-ax.set_ylabel('Power transmission and reflection coefficients', fontsize=14)
-ax.legend(fontsize=20)
+plt.title('Interface results', fontsize=18)
+plt.plot(th, R_P_Pot, label = r'$R_P$')
+plt.plot(th, R_S_Pot, label = r'$R_S$')
+plt.plot(th, T_P_Pot, label = r'$T_P$')
+plt.plot(th, T_S_Pot, label = r'$T_S$')
+plt.xlabel('Angle of incidence (degree)', fontsize=14)
+plt.ylabel('Power transmission and reflection coefficients', fontsize=14)
+plt.legend()
 
 plt.show()
